@@ -2,6 +2,7 @@
 using Autodesk.Navisworks.Api.Plugins;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
@@ -11,38 +12,48 @@ namespace NavisCheckerSener
 {
     class Models : INotifyPropertyChanged
     {
+        public ObservableCollection<string> Information { get; private set; }
         public event PropertyChangedEventHandler PropertyChanged;
-        public string Information { get; private set; }
-
-        public PropertyCategory oPC_TypeMark { get; private set; }
-        public PropertyCategory oPC_Volume { get; private set; }
-
-
+        Document oDoc = Autodesk.Navisworks.Api.Application.ActiveDocument;
         public Models()
         {
-            //TODO: IMplement information about multiple selections
-            Document oDoc = Autodesk.Navisworks.Api.Application.ActiveDocument;
-            if (oDoc.CurrentSelection.SelectedItems.Count>0)
-            {
-                ModelItem oSelectedItem = oDoc.CurrentSelection.SelectedItems[0];
-                oPC_TypeMark = oSelectedItem.PropertyCategories.FindCategoryByDisplayName("Type Mark");
-                oPC_Volume = oSelectedItem.PropertyCategories.FindCategoryByDisplayName("Volume");
-                UpdateDisplay();
-                
-            }            
-   
+            Information = new ObservableCollection<string>();
+            Autodesk.Navisworks.Api.Application.ActiveDocument.CurrentSelection.Changed += OnSelectionChanged;
+            Autodesk.Navisworks.Api.Application.ActiveDocumentChanged += OnDocumentChanged;
         }
 
-        private void UpdateDisplay()
+        private void OnDocumentChanged(object sender, EventArgs e)
         {
-            Information = "";
-            StringBuilder sb = new StringBuilder(1000);
-            sb.Append("TYPE MARK: ");
-            sb.Append(oPC_TypeMark.ToString());
-            sb.Append(Environment.NewLine);
-            Information = sb.ToString();
-            OnPropertyChanged("Information");
+            oDoc = Autodesk.Navisworks.Api.Application.ActiveDocument;
         }
+
+        private void OnSelectionChanged(object sender, EventArgs e)
+        {
+            Information.Clear();
+            Update();
+        }
+
+        public void Update()
+        {
+           
+            if (oDoc.CurrentSelection.SelectedItems.Count > 0)
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.Append("Information for Selected Items");
+                ModelItemCollection oSelectedItems = oDoc.CurrentSelection.SelectedItems;
+                foreach (ModelItem modelItem in oSelectedItems)
+                {     
+                    //TODO: Recomeçar daqui, abrir o navis e ver como estão organizadas as categorias e parâmetros por dentro.
+                    DataProperty dataProperty = modelItem.PropertyCategories.FindPropertyByDisplayName("Type Mark");
+                    sb.AppendLine("Type Mark: ");                    
+                    Information.Add(sb.ToString());                    
+                    
+                }
+                OnPropertyChanged("Information");
+            }
+        }
+
+
 
         private void OnPropertyChanged(string propertyName)
         {

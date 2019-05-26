@@ -31,5 +31,6 @@ namespace NavisCheckerSener
 
         public override void DestroyControlPane(System.Windows.Forms.Control pane) => pane.Dispose();
 
+               
     }
 }
