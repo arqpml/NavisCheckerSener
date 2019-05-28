@@ -29,7 +29,7 @@ namespace NavisCheckerSener
 
         private void OnSelectionChanged(object sender, EventArgs e)
         {
-            Information.Clear();
+            
             Update();
         }
 
@@ -38,14 +38,43 @@ namespace NavisCheckerSener
            
             if (oDoc.CurrentSelection.SelectedItems.Count > 0)
             {
-                StringBuilder sb = new StringBuilder();
-                sb.Append("Information for Selected Items");
+                Information.Clear();                
+                StringBuilder sb = new StringBuilder();                
                 ModelItemCollection oSelectedItems = oDoc.CurrentSelection.SelectedItems;
                 foreach (ModelItem modelItem in oSelectedItems)
-                {     
-                    //TODO: Recomeçar daqui, abrir o navis e ver como estão organizadas as categorias e parâmetros por dentro.
-                    DataProperty dataProperty = modelItem.PropertyCategories.FindPropertyByDisplayName("Type Mark");
-                    sb.AppendLine("Type Mark: ");                    
+                {
+
+                    DataProperty Mark = modelItem.PropertyCategories.FindPropertyByDisplayName("Element",
+                                                                                                       "Mark");
+
+                    if (Mark != null)
+                    {
+                        sb.AppendLine("Mark: ");
+                        try
+                        {
+                            sb.Append(Mark.Value.ToDisplayString());
+                        }
+                        catch (Exception)
+                        {
+                            sb.Append("erro");                            
+                        }                        
+                    }
+                    DataProperty Volume = modelItem.PropertyCategories.FindPropertyByDisplayName("Element",
+                                                                                   "Volume");
+                    if (Volume != null)
+                    {
+                        sb.AppendLine("Volume: ");
+                        try
+                        {
+                            sb.Append(Volume.Value.ToString());
+                        }
+                        catch (Exception)
+                        {
+                            sb.Append("erro volume");
+                        }
+                    }
+
+
                     Information.Add(sb.ToString());                    
                     
                 }
@@ -53,8 +82,7 @@ namespace NavisCheckerSener
             }
         }
 
-
-
+        
         private void OnPropertyChanged(string propertyName)
         {
             PropertyChangedEventHandler propertyChangedEvent = PropertyChanged;

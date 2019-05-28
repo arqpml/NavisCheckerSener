@@ -51,7 +51,7 @@
   <ItemGroup>
     <Reference Include="Autodesk.Navisworks.Api, Version=17.0.1336.83, Culture=neutral, PublicKeyToken=d85e58fa5af9b484, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Program Files\Autodesk\Navisworks Manage 2020\Autodesk.Navisworks.Api.dll</HintPath>
+      <HintPath>C:\Program Files\Autodesk\Navisworks Manage 2019\Autodesk.Navisworks.Api.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="PresentationCore" />
@@ -86,8 +86,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>IF EXIST "D:\Program Files\Autodesk\Navisworks Manage 2020\Plugins\Plugins\$(TargetName)\" rmdir /S /Q "$(ProjectDir)..\..\..\..\..\..\Plugins\$(TargetName)\"
+    <PostBuildEvent>IF EXIST "C:\Program Files\Autodesk\Navisworks Manage 2019\Plugins\Plugins\$(TargetName)\" rmdir /S /Q "$(ProjectDir)..\..\..\..\..\..\Plugins\$(TargetName)\"
 
-xcopy /Y "$(TargetDir)*.*" "D:\Program Files\Autodesk\Navisworks Manage 2020\Plugins\$(TargetName)\"</PostBuildEvent>
+xcopy /Y "$(TargetDir)*.*" "D:\Program Files\Autodesk\Navisworks Manage 2019\Plugins\$(TargetName)\"</PostBuildEvent>
   </PropertyGroup>
 </Project>
